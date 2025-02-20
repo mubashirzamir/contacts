@@ -1,10 +1,8 @@
 import {Button, Form, Input, Modal} from 'antd'
-import AvatarUpload from '@/components/AvatarUpload/AvatarUpload.jsx'
 import PhoneInput from 'antd-phone-input'
 import {NEW_CONTACT} from '@/helpers/constants.jsx'
 
 const formItemLayout = {
-    requiredMark: true,
     colon: false,
 }
 
@@ -53,7 +51,6 @@ const ContactFormModal = ({setContact, contact}) => {
 const ContactsForm = ({form, contact}) => {
     return <Form {...formItemLayout} form={form} initialValues={contact} preserve={false}>
         <Input type="hidden" name="id"/>
-        <AvatarUpload/>
 
         <Form.Item name="first_name" rules={[{required: true, message: 'First name is required.'}]}>
             <Input placeholder="First name"/>

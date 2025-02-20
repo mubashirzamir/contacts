@@ -1,5 +1,3 @@
-import {useMessage} from '@/components/MessageProvider/MessageProvider.jsx'
-
 export const genericNetworkError = (messageApi, error) => {
     messageApi.error(getErrorMessage(error))
 }
@@ -33,4 +31,16 @@ const getErrorMessage = (error) => {
         default:
             return 'Something went wrong'
     }
+}
+
+export const generateColor = (initial) => {
+    let letter = initial.toUpperCase()
+
+    if (!/[A-Z]/.test(letter)) {
+        return '#000000'
+    }
+
+    const charCode = letter.charCodeAt(0) - 65
+    const hue = (charCode * (360 / 26)) % 360
+    return `hsl(${hue}, 20%, 50%)`
 }

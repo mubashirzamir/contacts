@@ -1,9 +1,10 @@
 import {useEffect, useState} from 'react'
-import {Avatar, Button, List} from 'antd'
+import {Button, List} from 'antd'
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons'
 import ContactsService from '@/services/ContactsService.jsx'
 import {genericNetworkError} from '@/helpers/utils.jsx'
 import {useMessage} from '@/components/MessageProvider/MessageProvider.jsx'
+import ContactAvatar from '@/components/ContactAvatar/index.jsx'
 
 const pagination = {
     position: 'bottom',
@@ -53,7 +54,7 @@ const ContactsList = ({setContact}) => {
                         className="hover:underline cursor-pointer"
                         onClick={() => onEdit(item)} key={item.email} actions={getListActions(item)}>
                         <List.Item.Meta
-                            avatar={<Avatar src={item.avatar}/>}
+                            avatar={<ContactAvatar contact={item}/>}
                             title={`${item.first_name} ${item.surname}`}
                             description={<div>
                                 <div>+{item.phone.countryCode} {item.phone.areaCode} {item.phone.phoneNumber}</div>
