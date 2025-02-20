@@ -1,9 +1,11 @@
+import {IN_DEV} from '@/helpers/constants.jsx'
+
 export const genericNetworkError = (messageApi, error) => {
     messageApi.error(getErrorMessage(error))
 }
 
 const getErrorMessage = (error) => {
-    if (error?.response?.data?.message) {
+    if (IN_DEV && error?.response?.data?.message) {
         return error.response.data.message
     }
 

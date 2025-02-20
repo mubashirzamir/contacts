@@ -11,7 +11,9 @@ import {useModal} from '@/components/ModalProvider/ModalProvider.jsx'
 import ContactFormModal from '@/pages/Home/ContactFormModal.jsx'
 
 const Home = () => {
-    const [contacts, setContacts] = useState([])
+    const [search, setSearch] = useState(undefined)
+    const [paginationState, setPaginationState] = useState({page: 1, per_page: 2})
+    const [paginatedContacts, setPaginatedContacts] = useState([])
     const [contact, setContact] = useState(null)
     const [loading, setLoading] = useState(false)
     const messageApi = useMessage()
@@ -19,12 +21,20 @@ const Home = () => {
 
     useEffect(() => {
         loadContacts()
-    }, [])
+    }, [paginationState])
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setPaginationState(prev => ({...prev, page: 1})) // Reset to page 1
+        }, 500)
+
+        return () => clearTimeout(handler)
+    }, [search])
 
     const loadContacts = () => {
         setLoading(true)
-        ContactsService.get()
-            .then(setContacts)
+        ContactsService.all({...paginationState, search})
+            .then(setPaginatedContacts)
             .catch(e => genericNetworkError(messageApi, e))
             .finally(() => setLoading(false))
     }
@@ -42,15 +52,22 @@ const Home = () => {
                     .then(() => {
                         messageApi.success('Contact deleted successfully')
                         loadContacts()
-                    }).catch(e => genericNetworkError(messageApi, e))
+                    })
+                    .catch(e => genericNetworkError(messageApi, e))
                     .finally(() => setLoading(false))
             }
         })
     }
 
     return <>
-        <ContactsSearch/>
-        <ContactsList data={contacts} setContact={setContact} loading={loading} onDelete={deleteContact}/>
+        <ContactsSearch search={search} setSearch={setSearch}/>
+        <ContactsList
+            paginatedData={paginatedContacts}
+            setContact={setContact}
+            loading={loading}
+            onDelete={deleteContact}
+            setPaginationState={setPaginationState}
+        />
         <ContactFormModal contact={contact} setContact={setContact} onDelete={deleteContact}
                           loadContacts={loadContacts}/>
         <FloatButton type="primary" icon={<PlusOutlined/>} onClick={() => setContact(NEW_CONTACT)}/>

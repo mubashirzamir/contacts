@@ -3,16 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\Contact;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Contact::all();
+        return Contact::query()
+            ->when($request->has('search'), fn(Builder $query) => Contact::applySearch($query, $request->query('search', '')))
+            ->paginate(
+                perPage: $request->query('per_page', 10),
+                page: $request->query('page', 1)
+            );
     }
 
     /**

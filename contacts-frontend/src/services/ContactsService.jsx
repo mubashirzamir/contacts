@@ -2,9 +2,12 @@ import request from '@/request.js'
 
 const baseUrl = import.meta.env.VITE_API_BASE_URL + '/contacts'
 
-const get = () => {
-    return request.get(`${baseUrl}`)
+const all = (params = {}) => {
+    return request.get(`${baseUrl}`, {
+        params
+    })
 }
+
 const create = (contact) => {
     return request.post(`${baseUrl}`, contact)
 }
@@ -16,6 +19,6 @@ const update = (contact) => {
 const remove = (id) => {
     return request.delete(`${baseUrl}/${id}`)
 }
-export default {get, create, update, remove}
+export default {all, create, update, remove}
 
 

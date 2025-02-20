@@ -61,4 +61,18 @@ class Contact extends Model
         'city',
         'postcode'
     ];
+
+    public static function applySearch(Builder $query, string $search): void
+    {
+        $query->where(function ($query) use ($search) {
+            $query->whereRaw('LOWER(first_name) LIKE ?', ['%' . strtolower($search) . '%'])
+                ->orWhereRaw('LOWER(surname) LIKE ?', ['%' . strtolower($search) . '%'])
+                ->orWhereRaw('LOWER(email) LIKE ?', ['%' . strtolower($search) . '%'])
+                ->orWhereRaw("LOWER(" .
+                    "json_extract(phone, '$.countryCode') || " .
+                    "json_extract(phone, '$.areaCode') || " .
+                    "json_extract(phone, '$.phoneNumber')" .
+                    ") LIKE ?", ['%' . strtolower($search) . '%']);
+        });
+    }
 }
