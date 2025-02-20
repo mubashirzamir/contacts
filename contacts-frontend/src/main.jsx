@@ -8,17 +8,20 @@ import UhOh from '@/components/UhOh/UhOh.jsx'
 import DarkModeProvider from '@/components/DarkMode/DarkModeProvider.jsx'
 import {MessageProvider} from '@/components/MessageProvider/MessageProvider.jsx'
 import AppLayout from '@/components/AppLayout/AppLayout.jsx'
+import {ModalProvider} from '@/components/ModalProvider/ModalProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
     <StrictMode>
         <DarkModeProvider>
             <AppLayout>
                 <ErrorBoundary FallbackComponent={UhOh}>
-                    <MessageProvider>
-                        <BrowserRouter>
-                            <App/>
-                        </BrowserRouter>
-                    </MessageProvider>
+                    <BrowserRouter>
+                        <MessageProvider>
+                            <ModalProvider>
+                                <App/>
+                            </ModalProvider>
+                        </MessageProvider>
+                    </BrowserRouter>
                 </ErrorBoundary>
             </AppLayout>
         </DarkModeProvider>
