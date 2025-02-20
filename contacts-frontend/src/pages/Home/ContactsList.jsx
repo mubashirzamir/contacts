@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {Avatar, Button, List} from 'antd'
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons'
 import ContactsService from '@/services/ContactsService.jsx'
 import {genericNetworkError} from '@/helpers/utils.jsx'
+import {useMessage} from '@/components/MessageProvider/MessageProvider.jsx'
 
 const pagination = {
     position: 'bottom',
@@ -13,13 +14,14 @@ const pagination = {
 const ContactsList = ({setContact}) => {
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState([])
+    const messageApi = useMessage()
 
     useEffect(() => {
         const loadContacts = () => {
             setLoading(true)
             ContactsService.get()
                 .then(setData)
-                .catch(genericNetworkError)
+                .catch(e => genericNetworkError(messageApi, e))
                 .finally(() => setLoading(false))
         }
 

@@ -1,17 +1,7 @@
-import {notification} from 'antd'
+import {useMessage} from '@/components/MessageProvider/MessageProvider.jsx'
 
-const notificationProps = {
-    placement: 'bottomRight',
-    duration: 3,
-}
-
-export const genericNetworkError = (error) => {
-    console.error(error)
-
-    notification.error({
-        ...notificationProps,
-        message: getErrorMessage(error),
-    })
+export const genericNetworkError = (messageApi, error) => {
+    messageApi.error(getErrorMessage(error))
 }
 
 const getErrorMessage = (error) => {
