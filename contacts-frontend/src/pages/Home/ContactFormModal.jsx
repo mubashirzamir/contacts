@@ -1,4 +1,3 @@
-import React from 'react'
 import {Button, Form, Input, Modal} from 'antd'
 import AvatarUpload from '@/components/AvatarUpload/AvatarUpload.jsx'
 import PhoneInput from 'antd-phone-input'
@@ -9,7 +8,7 @@ const formItemLayout = {
     colon: false,
 }
 
-const ContactFormModal = ({open, setOpen, contact}) => {
+const ContactFormModal = ({setContact, contact}) => {
     const [form] = Form.useForm()
     const createMode = contact === NEW_CONTACT
     const editMode = !createMode
@@ -18,14 +17,14 @@ const ContactFormModal = ({open, setOpen, contact}) => {
     const handleOk = () => {
         form.validateFields().then(values => {
             console.log('values', values)
-            setOpen(false)
+            setContact(null)
         }).catch(error => {
             console.log('error', error)
         })
     }
 
     const handleCancel = () => {
-        setOpen(false)
+        setContact(null)
     }
 
     const getModalFooter = () => {
@@ -43,7 +42,7 @@ const ContactFormModal = ({open, setOpen, contact}) => {
     }
 
     return <>
-        <Modal width="50%" footer={getModalFooter} title={modalTitle} open={open} onOk={handleOk}
+        <Modal destroyOnClose width="50%" footer={getModalFooter} title={modalTitle} open={!!contact} onOk={handleOk}
                onCancel={handleCancel}>
             <ContactsForm form={form} contact={contact}/>
         </Modal>
@@ -52,14 +51,11 @@ const ContactFormModal = ({open, setOpen, contact}) => {
 }
 
 const ContactsForm = ({form, contact}) => {
-    if (contact) {
-        form.setFieldsValue(contact)
-    }
-
-    return <Form {...formItemLayout} form={form}>
+    return <Form {...formItemLayout} form={form} initialValues={contact} preserve={false}>
+        <Input type="hidden" name="id"/>
         <AvatarUpload/>
 
-        <Form.Item name="firstName" rules={[{required: true, message: 'First name is required.'}]}>
+        <Form.Item name="first_name" rules={[{required: true, message: 'First name is required.'}]}>
             <Input placeholder="First name"/>
         </Form.Item>
 
@@ -67,23 +63,23 @@ const ContactsForm = ({form, contact}) => {
             <Input placeholder="Surname"/>
         </Form.Item>
 
-        <Form.Item name="phoneNumber" rules={[{required: true, message: 'A valid phone number is required.'}]}>
-            <PhoneInput placeholder="Phone Number"/>
+        <Form.Item name="phone" rules={[{required: true, message: 'A valid phone number is required.'}]}>
+            <PhoneInput distinct enableSearch placeholder="Phone Number"/>
         </Form.Item>
 
         <Form.Item name="email" rules={[{type: 'email', message: 'A valid email is required.'}]}>
             <Input placeholder="Email"/>
         </Form.Item>
 
-        <Form.Item name="addressLine01">
+        <Form.Item name="address_line_01">
             <Input placeholder="Address Line 01"/>
         </Form.Item>
 
-        <Form.Item name="addressLine02">
+        <Form.Item name="address_line_02">
             <Input placeholder="Address Line 02"/>
         </Form.Item>
 
-        <Form.Item name="addressLine03">
+        <Form.Item name="address_line_03">
             <Input placeholder="Address Line 03"/>
         </Form.Item>
 

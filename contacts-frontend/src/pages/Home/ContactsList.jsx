@@ -1,21 +1,26 @@
 import React, {useEffect, useState} from 'react'
 import {Avatar, Button, List} from 'antd'
 import {DeleteOutlined, EditOutlined} from '@ant-design/icons'
-import {contacts} from '@/helpers/data.jsx'
+import ContactsService from '@/services/ContactsService.jsx'
+import {genericNetworkError} from '@/helpers/utils.jsx'
 
 const pagination = {
     position: 'bottom',
     align: 'end',
-    pageSize: 50,
+    pageSize: 5,
 }
 
 const ContactsList = ({setContact}) => {
     const [loading, setLoading] = useState(false)
-    const [data, setData] = useState(contacts)
+    const [data, setData] = useState([])
 
     useEffect(() => {
         const loadContacts = () => {
-
+            setLoading(true)
+            ContactsService.get()
+                .then(setData)
+                .catch(genericNetworkError)
+                .finally(() => setLoading(false))
         }
 
         loadContacts()
@@ -38,6 +43,7 @@ const ContactsList = ({setContact}) => {
     return (
         <div className="px-4 py-4">
             <List
+                loading={loading}
                 dataSource={data}
                 pagination={pagination}
                 renderItem={(item) => (
@@ -46,10 +52,12 @@ const ContactsList = ({setContact}) => {
                         onClick={() => onEdit(item)} key={item.email} actions={getListActions(item)}>
                         <List.Item.Meta
                             avatar={<Avatar src={item.avatar}/>}
-                            title={`${item.firstName} ${item.surname}`}
-                            description={item.email}
+                            title={`${item.first_name} ${item.surname}`}
+                            description={<div>
+                                <div>+{item.phone.countryCode} {item.phone.areaCode} {item.phone.phoneNumber}</div>
+                                <div>{item.email}</div>
+                            </div>}
                         />
-                        <div>{item.phoneNumber}</div>
                     </List.Item>
                 )}
             />

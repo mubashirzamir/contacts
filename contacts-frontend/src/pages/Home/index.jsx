@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import ContactsList from '@/pages/Home/ContactsList.jsx'
 import ContactsSearch from '@/pages/Home/ContactsSearch.jsx'
 import {FloatButton} from 'antd'
@@ -12,7 +12,7 @@ const Home = () => {
     return <>
         <ContactsSearch/>
         <ContactsList setContact={setContact}/>
-        <ContactFormModal open={!!contact} setOpen={setContact} contact={contact}/>
+        <ContactFormModal setContact={setContact} contact={contact}/>
         <FloatButton type="primary" icon={<PlusOutlined/>} onClick={() => setContact(NEW_CONTACT)}/>
     </>
 }
