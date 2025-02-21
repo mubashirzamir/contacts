@@ -18,6 +18,8 @@ class ContactService
         return Contact::query()
             ->when($request->has('search'), fn(Builder $query) => $this->applySearch($query, $request->query('search', '')))
             ->orderBy('first_name')
+            ->orderBy('surname')
+            ->orderBy('email')
             ->paginate(
                 perPage: $request->query('per_page', 10),
                 page: $request->query('page', 1)
