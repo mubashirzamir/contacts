@@ -2,70 +2,56 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ContactRequest;
 use App\Models\Contact;
-use Illuminate\Database\Eloquent\Builder;
+use App\Responses\GenericResponse;
+use App\Services\ContactService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class ContactController extends Controller
 {
-    /**
-     * Display a listing of the resource
-     */
-    public function index(Request $request)
+    private ContactService $contactService;
+
+    public function __construct(ContactService $contactService)
     {
-        return Contact::query()
-            ->when($request->has('search'), fn(Builder $query) => Contact::applySearch($query, $request->query('search', '')))
-            ->paginate(
-                perPage: $request->query('per_page', 10),
-                page: $request->query('page', 1)
-            );
+        $this->contactService = $contactService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function index(Request $request): JsonResponse
     {
-        //
+        return GenericResponse::success('Contacts retrieved successfully', $this->contactService->all($request))
+            ->setStatus(200)
+            ->toResponse();
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ContactRequest $request): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return GenericResponse::success('Contact created successfully', $this->contactService->create($request->all()))
+            ->setStatus(201)
+            ->toResponse();
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ContactRequest $request, Contact $contact): JsonResponse
     {
-        //
+        return GenericResponse::success('Contact updated successfully', $this->contactService->update($request->all(), $contact))
+            ->setStatus(200)
+            ->toResponse();
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Contact $contact): JsonResponse
     {
-        //
+        return GenericResponse::success('Contact deleted successfully', $this->contactService->delete($contact))
+            ->setStatus(204)
+            ->toResponse();
     }
 }

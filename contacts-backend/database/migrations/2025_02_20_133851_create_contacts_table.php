@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->timestamps();
             $table->string("first_name")->comment("First name of the contact");
             $table->string("surname")->comment("Surname of the contact");
-            $table->string("email")->nullable()->comment("Email address of the contact");
+            $table->string("email")->index()->unique()->nullable()->comment("Email address of the contact");
             $table->jsonb("phone")->comment("Phone number of the contact");
             $table->string("address_line_01")->nullable()->comment("Address line 01 of the contact");
             $table->string("address_line_02")->nullable()->comment("Address line 02 of the contact");

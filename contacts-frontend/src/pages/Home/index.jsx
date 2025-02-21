@@ -34,7 +34,7 @@ const Home = () => {
     const loadContacts = () => {
         setLoading(true)
         ContactsService.all({...paginationState, search})
-            .then(setPaginatedContacts)
+            .then(res => setPaginatedContacts(res.data))
             .catch(e => genericNetworkError(messageApi, e))
             .finally(() => setLoading(false))
     }
@@ -49,8 +49,8 @@ const Home = () => {
             onOk: () => {
                 setLoading(true)
                 ContactsService.remove(item.id)
-                    .then(() => {
-                        messageApi.success('Contact deleted successfully')
+                    .then((res) => {
+                        messageApi.success(res.message)
                         loadContacts()
                     })
                     .catch(e => genericNetworkError(messageApi, e))

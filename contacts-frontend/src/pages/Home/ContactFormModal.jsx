@@ -23,8 +23,8 @@ const ContactFormModal = ({setContact, contact, onDelete, loadContacts}) => {
         form.validateFields().then(values => {
             setLoading(true)
             service(values)
-                .then(() => {
-                    messageApi.success('Contact saved successfully')
+                .then((res) => {
+                    messageApi.success(res.message)
                     closeModal()
                     loadContacts()
                 })
