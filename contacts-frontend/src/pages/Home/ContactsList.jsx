@@ -32,7 +32,7 @@ const ContactsList = ({paginatedData, setContact, onDelete, loading, setPaginati
                             className="cursor-pointer hover:underline"
                             onClick={() => onEdit(item)}
                             avatar={<ContactAvatar contact={item}/>}
-                            title={`${item.first_name} ${item.surname}`}
+                            title={<div className="font-medium">{item.first_name} {item.surname}</div>}
                             description={
                                 <div>
                                     <div>+{item.phone?.countryCode} {item.phone?.areaCode} {item.phone?.phoneNumber}</div>
