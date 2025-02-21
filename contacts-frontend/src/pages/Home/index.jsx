@@ -51,7 +51,13 @@ const Home = () => {
                 ContactsService.remove(item.id)
                     .then((res) => {
                         messageApi.success(res.message)
-                        loadContacts()
+
+                        // If there is only one item in the current page and it's deleted, Go back one page
+                        if (paginatedContacts.data.length === 1 && paginatedContacts.current_page > 1) {
+                            setPaginationState(prev => ({...prev, page: prev.page - 1}), loadContacts)
+                        } else {
+                            loadContacts()
+                        }
                     })
                     .catch(e => genericNetworkError(messageApi, e))
                     .finally(() => setLoading(false))

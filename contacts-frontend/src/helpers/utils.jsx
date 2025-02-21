@@ -1,6 +1,7 @@
 import {IN_DEV} from '@/helpers/constants.jsx'
 
 export const genericNetworkError = (messageApi, error) => {
+    console.error(error)
     messageApi.error(getErrorMessage(error))
 }
 
