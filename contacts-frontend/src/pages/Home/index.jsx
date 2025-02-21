@@ -53,9 +53,9 @@ const Home = () => {
             okButtonProps: {danger: true},
             okText: 'Delete',
             onOk: () => {
-                setLoading(true)
-                ContactsService.remove(item.id)
+                return ContactsService.remove(item.id)
                     .then((res) => {
+                        setLoading(true)
                         messageApi.success(res.message)
 
                         // If there is only one item in the current page and it's deleted, go back one page
@@ -66,10 +66,14 @@ const Home = () => {
                                 return {...prev, page: newPage}
                             })
                         } else {
-                            loadContacts()
+                            // Trigger useEffect by updating state
+                            setPaginationState(prev => ({...prev}))
                         }
                     })
-                    .catch(e => genericNetworkError(messageApi, e))
+                    .catch((e) => {
+                        genericNetworkError(messageApi, e)
+                        return Promise.reject() // Prevent modal from closing
+                    })
                     .finally(() => setLoading(false))
             }
         })
