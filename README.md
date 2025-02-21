@@ -61,7 +61,7 @@ composer install
 php artisan key:generate
 ```
 
-### 4. Run Migrations & Seed Database
+### 4. Run Migrations & Seed Database (Optional: Since the SQLite database is already seeded)
 ```sh
 php artisan migrate:fresh --seed
 ```
