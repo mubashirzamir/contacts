@@ -30,7 +30,7 @@ class ContactController extends Controller
      */
     public function store(ContactRequest $request): JsonResponse
     {
-        return GenericResponse::success(__('responses_contacts.index'), $this->contactService->create($request->all()))
+        return GenericResponse::success(__('responses_contacts.store'), $this->contactService->create($request->all()))
             ->setStatus(201)
             ->toResponse();
     }
@@ -40,7 +40,7 @@ class ContactController extends Controller
      */
     public function update(ContactRequest $request, Contact $contact): JsonResponse
     {
-        return GenericResponse::success(__('responses_contacts.index'), $this->contactService->update($request->all(), $contact))
+        return GenericResponse::success(__('responses_contacts.update'), $this->contactService->update($request->all(), $contact))
             ->setStatus(200)
             ->toResponse();
     }
@@ -50,7 +50,7 @@ class ContactController extends Controller
      */
     public function destroy(Contact $contact): JsonResponse
     {
-        return GenericResponse::success(__('responses_contacts.index'), $this->contactService->delete($contact))
+        return GenericResponse::success(__('responses_contacts.destroy'), $this->contactService->delete($contact))
             ->setStatus(200)
             ->toResponse();
     }

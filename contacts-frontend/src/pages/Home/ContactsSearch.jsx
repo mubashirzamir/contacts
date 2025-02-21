@@ -5,7 +5,7 @@ const ContactsSearch = ({search, setSearch}) => {
     return (
         <div className="contacts-search">
             <Input
-                placeholder="Search contacts"
+                placeholder="Search contacts by name, email, or phone number."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 prefix={<SearchOutlined/>}
