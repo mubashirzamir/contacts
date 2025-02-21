@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react'
+import {useSearchParams} from 'react-router-dom'
 import ContactsList from '@/pages/Home/ContactsList.jsx'
 import ContactsSearch from '@/pages/Home/ContactsSearch.jsx'
 import {FloatButton} from 'antd'
@@ -11,8 +12,12 @@ import {useModal} from '@/components/ModalProvider/ModalProvider.jsx'
 import ContactFormModal from '@/pages/Home/ContactFormModal.jsx'
 
 const Home = () => {
-    const [search, setSearch] = useState(undefined)
-    const [paginationState, setPaginationState] = useState({page: 1, per_page: 10})
+    const [searchParams, setSearchParams] = useSearchParams()
+    const [search, setSearch] = useState(searchParams.get('search') || '')
+    const [paginationState, setPaginationState] = useState({
+        page: parseInt(searchParams.get('page')) || 1,
+        per_page: parseInt(searchParams.get('per_page')) || 10
+    })
     const [paginatedContacts, setPaginatedContacts] = useState([])
     const [contact, setContact] = useState(null)
     const [loading, setLoading] = useState(false)
@@ -26,6 +31,7 @@ const Home = () => {
     useEffect(() => {
         const handler = setTimeout(() => {
             setPaginationState(prev => ({...prev, page: 1})) // Reset to page 1
+            updateURL({page: 1, search}) // Update URL when search changes
         }, 500)
 
         return () => clearTimeout(handler)
@@ -52,9 +58,13 @@ const Home = () => {
                     .then((res) => {
                         messageApi.success(res.message)
 
-                        // If there is only one item in the current page and it's deleted, Go back one page
+                        // If there is only one item in the current page and it's deleted, go back one page
                         if (paginatedContacts.data.length === 1 && paginatedContacts.current_page > 1) {
-                            setPaginationState(prev => ({...prev, page: prev.page - 1}), loadContacts)
+                            setPaginationState(prev => {
+                                const newPage = prev.page - 1
+                                updateURL({page: newPage}) // Update URL
+                                return {...prev, page: newPage}
+                            })
                         } else {
                             loadContacts()
                         }
@@ -65,14 +75,38 @@ const Home = () => {
         })
     }
 
+    const updateURL = (updates) => {
+        setSearchParams(prev => {
+            const newParams = new URLSearchParams(prev)
+            Object.entries(updates).forEach(([key, value]) => {
+                if (value) {
+                    newParams.set(key, value)
+                } else {
+                    newParams.delete(key)
+                }
+            })
+            return newParams
+        })
+    }
+
+    const setSearchWithUrl = (value) => {
+        setSearch(value)
+        updateURL({search: value})
+    }
+
+    const setPaginationWithUrl = (value) => {
+        setPaginationState(value)
+        updateURL(value)
+    }
+
     return <>
-        <ContactsSearch search={search} setSearch={setSearch}/>
+        <ContactsSearch search={search} setSearch={setSearchWithUrl}/>
         <ContactsList
             paginatedData={paginatedContacts}
             setContact={setContact}
             loading={loading}
             onDelete={deleteContact}
-            setPaginationState={setPaginationState}
+            setPaginationState={setPaginationWithUrl}
         />
         <ContactFormModal contact={contact} setContact={setContact} onDelete={deleteContact}
                           loadContacts={loadContacts}/>
