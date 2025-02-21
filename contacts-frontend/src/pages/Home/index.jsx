@@ -12,7 +12,7 @@ import ContactFormModal from '@/pages/Home/ContactFormModal.jsx'
 
 const Home = () => {
     const [search, setSearch] = useState(undefined)
-    const [paginationState, setPaginationState] = useState({page: 1, per_page: 2})
+    const [paginationState, setPaginationState] = useState({page: 1, per_page: 10})
     const [paginatedContacts, setPaginatedContacts] = useState([])
     const [contact, setContact] = useState(null)
     const [loading, setLoading] = useState(false)
